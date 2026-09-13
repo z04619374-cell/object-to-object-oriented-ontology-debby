@@ -1,0 +1,13 @@
+:root {
+  color-scheme: dark;
+  --black: #050505;
+  --ink: #f1f0ec;
+  --muted: #92918d;
+  --faint: #4a4a48;
+  --line: #2d2d2b;
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans: Inter, 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --page-pad: clamp(1.25rem, 4vw, 4.5rem);
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
