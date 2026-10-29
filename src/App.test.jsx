@@ -3,84 +3,60 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 
-async function enterFirstMemory(user) {
+async function enterHub(user) {
   render(<App />)
-  await user.click(screen.getByRole('button', { name: /enter memory with debby/i }))
+  await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
 }
 
-describe('Object to Object-Oriented Ontology', () => {
-  it('shows only the memory entry on the first screen, then enters the journey', async () => {
+describe('Ashtray interactive narrative', () => {
+  it('enters the ashtray hub from the campus map', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(screen.queryByRole('heading')).not.toBeInTheDocument()
-    expect(screen.getByText("Hi, I'm Debby")).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /enter memory with debby/i })).toHaveTextContent('Enter memory')
-    await user.click(screen.getByRole('button', { name: /enter memory with debby/i }))
-    expect(screen.getByRole('button', { name: /reveal next memory fragment/i })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /next image|open this memory/i })).not.toBeInTheDocument()
+
+    expect(screen.getByRole('heading', { name: /campus fragment/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
+
+    expect(screen.getByRole('heading', { name: /the ashtray/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /look toward the road/i })).toBeInTheDocument()
   })
 
-  it('uses Debby as the entry control and opens directly into the image interaction', async () => {
+  it.each([
+    [/look toward the road/i, /a way out/i],
+    [/look toward the statue/i, /authority/i],
+    [/look toward the tree/i, /knowledge/i],
+    [/look toward the city/i, /consumption/i],
+  ])('navigates through environmental directions', async (direction, heading) => {
+    const user = userEvent.setup()
+    await enterHub(user)
+
+    await user.click(screen.getByRole('button', { name: direction }))
+
+    expect(screen.getByRole('heading', { name: heading })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /return to the ashtray/i })).toBeInTheDocument()
+  })
+
+  it('advances the road interaction and returns after blackout', async () => {
+    const user = userEvent.setup()
+    await enterHub(user)
+    await user.click(screen.getByRole('button', { name: /look toward the road/i }))
+
+    await user.click(screen.getByRole('button', { name: /ignite the car/i }))
+    expect(screen.getByText(/inside the car/i)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /start the car/i }))
+    expect(screen.getByText(/the road is disappearing/i)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /continue into black/i }))
+    await user.click(screen.getByRole('button', { name: /return through the darkness/i }))
+
+    expect(screen.getByRole('heading', { name: /the ashtray/i })).toBeInTheDocument()
+  })
+
+  it('keeps every hotspot keyboard-accessible', async () => {
     const user = userEvent.setup()
     render(<App />)
-    const entry = screen.getByRole('button', { name: /enter memory with debby/i })
-    expect(entry.querySelector('img')).toHaveAttribute('src', '/images/debby-enter.png')
-    await user.click(entry)
-    expect(screen.getByText('01 / 03')).toBeInTheDocument()
-    expect(screen.getByRole('img')).toHaveAttribute('src', '/images/IMG_7109.JPG')
-    const interactiveImage = screen.getByRole('button', { name: /reveal next memory fragment/i })
-    await user.click(interactiveImage)
-    expect(screen.getByText('02 / 03')).toBeInTheDocument()
-    expect(screen.getByRole('img')).toHaveAttribute('src', '/images/IMG_7074.jpg')
-    await user.click(interactiveImage)
-    expect(screen.getByText('03 / 03')).toBeInTheDocument()
-    expect(screen.getByRole('img')).toHaveAttribute('src', '/images/IMG_7076.jpg')
-  })
 
-  it('reveals natural sentences by clicking the image and finishes one perspective before the next', async () => {
-    const user = userEvent.setup()
-    await enterFirstMemory(user)
-    const memoryImage = screen.getByRole('button', { name: /reveal next memory fragment/i })
-    await user.click(memoryImage)
-    expect(screen.getByText('DEBBY')).toBeInTheDocument()
-    const debbySentence = screen.getByText(/my owner and i are sitting/i).textContent
-    await user.click(memoryImage)
-    expect(screen.getByText('PHOTOGRAPHER')).toBeInTheDocument()
-    expect(screen.queryByText(debbySentence)).not.toBeInTheDocument()
-    expect(screen.queryByLabelText(/previously revealed text/i)).not.toBeInTheDocument()
-
-    while (screen.queryByRole('button', { name: /reveal next memory fragment/i })) {
-      await user.click(screen.getByRole('button', { name: /reveal next memory fragment/i }))
-    }
-    expect(screen.getByRole('button', { name: /view object data/i })).toBeInTheDocument()
-  })
-
-  it('opens and closes object data with Escape', async () => {
-    const user = userEvent.setup()
-    await enterFirstMemory(user)
-    while (screen.queryByRole('button', { name: /reveal next memory fragment/i })) {
-      await user.click(screen.getByRole('button', { name: /reveal next memory fragment/i }))
-    }
-    await user.click(screen.getByRole('button', { name: /view object data/i }))
-    expect(screen.getByRole('dialog', { name: /object data/i })).toBeInTheDocument()
-    expect(screen.getByText('IMG_7109.JPG')).toBeInTheDocument()
-    expect(screen.queryByText(/not provided/i)).not.toBeInTheDocument()
-    await user.keyboard('{Escape}')
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  })
-
-  it('reaches the ending after the final journey and restarts', async () => {
-    const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: /enter memory with debby/i }))
-    while (screen.queryByRole('button', { name: /reveal next memory fragment/i })) {
-      await user.click(screen.getByRole('button', { name: /reveal next memory fragment/i }))
-    }
-    await user.click(screen.getByRole('button', { name: /finish journey/i }))
-
-    const restart = screen.getByRole('button', { name: /restart/i })
-    expect(screen.queryByText(/was any of it mine|you tell me/i)).not.toBeInTheDocument()
-    await user.click(restart)
-    expect(screen.getByRole('button', { name: /enter memory with debby/i })).toBeInTheDocument()
+    await user.tab()
+    expect(screen.getByRole('button', { name: /burn the teaching building/i })).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('button', { name: /enter at the ashtray/i })).toHaveFocus()
   })
 })
