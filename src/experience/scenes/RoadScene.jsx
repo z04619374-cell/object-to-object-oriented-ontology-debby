@@ -1,28 +1,30 @@
 import { Hand } from '../components/Hand'
 import { Hotspot } from '../components/Hotspot'
-import { IllustrationLayer } from '../components/IllustrationLayer'
 import { ReturnHotspot } from '../components/ReturnHotspot'
 import { Scene } from '../components/Scene'
+import { assetPath } from '../../utils/assetPath'
 
 export function RoadScene({ step, onAdvance, onReturn }) {
   const inside = step >= 1
   const moving = step >= 2
   const black = step >= 3
+  const base = import.meta.env.BASE_URL
+  const roadExterior = assetPath(base, 'art/road/road-exterior.jpg')
+  const driverView = assetPath(base, 'art/road/driver-view.jpg')
+  const cigaretteHand = assetPath(base, 'art/shared/cigarette-hand.png')
 
   return (
     <Scene id="road" title="A way out" subtitle="Road / escape" tone={black ? 'black' : 'day'}>
       {!inside ? (
         <>
-          <IllustrationLayer x={50} y={73} width={100} height={46} className="road-plane" />
-          <IllustrationLayer x={70} y={43} width={34} height={25} className="station"><span>FLINDERS</span></IllustrationLayer>
-          <Hotspot label="Ignite the car" x={48} y={62} width={28} height={23} onClick={onAdvance}>
-            <span className="car-shape" aria-hidden="true"><i /></span>
+          <img className="scene-art" src={roadExterior} alt="Road beside the ashtray" />
+          <Hotspot label="Ignite the car" x={46} y={63} width={43} height={33} onClick={onAdvance}>
+            <span aria-hidden="true" />
           </Hotspot>
         </>
       ) : (
         <>
-          <IllustrationLayer x={50} y={61} width={100} height={68} className={`windshield${moving ? ' windshield--moving' : ''}`} />
-          <IllustrationLayer x={50} y={84} width={66} height={28} className="dashboard"><span /></IllustrationLayer>
+          {!black ? <img className={`scene-art${moving ? ' scene-art--moving' : ''}`} src={driverView} alt="Driver view into the underpass" /> : null}
           <p className="road-status">{moving ? 'The road is disappearing.' : 'Inside the car. No destination remains.'}</p>
           {step === 1 ? (
             <Hotspot label="Start the car" x={50} y={79} width={18} height={16} onClick={onAdvance}><span className="ignition" aria-hidden="true" /></Hotspot>
@@ -34,7 +36,7 @@ export function RoadScene({ step, onAdvance, onReturn }) {
         </>
       )}
       {!black ? <ReturnHotspot onReturn={onReturn} /> : null}
-      <Hand active={!inside} />
+      {!inside ? <Hand active src={cigaretteHand} /> : null}
     </Scene>
   )
 }

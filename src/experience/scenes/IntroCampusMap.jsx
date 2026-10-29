@@ -1,28 +1,23 @@
 import { Hand } from '../components/Hand'
 import { Hotspot } from '../components/Hotspot'
-import { IllustrationLayer } from '../components/IllustrationLayer'
 import { Scene } from '../components/Scene'
+import { assetPath } from '../../utils/assetPath'
 
 export function IntroCampusMap({ step, onAdvance, onEnterHub }) {
   const transformed = step > 0
+  const base = import.meta.env.BASE_URL
+  const mapSrc = assetPath(base, transformed ? 'art/intro/campus-map-b.jpg' : 'art/intro/campus-map-a.jpg')
+  const cigaretteHand = assetPath(base, 'art/shared/cigarette-hand.png')
 
   return (
     <Scene id="intro" title="Campus fragment" subtitle="A location remembered incompletely">
-      <IllustrationLayer x={50} y={54} width={76} height={68} className={transformed ? 'map map--burned' : 'map'}>
-        <span className="map__street map__street--a" />
-        <span className="map__street map__street--b" />
-        <span className="map__street map__street--c" />
-        <span className="map__block map__block--a" />
-        <span className="map__block map__block--b" />
-        <span className="map__block map__block--c" />
-        <span className="map__label">SWANSTON ST</span>
-      </IllustrationLayer>
+      <img className={`scene-art${transformed ? ' scene-art--burned' : ''}`} src={mapSrc} alt="Illustrated RMIT campus map" />
 
-      <Hotspot label="Burn the teaching building" x={59} y={41} width={17} height={22} onClick={onAdvance}>
-        <span className="placeholder-building" aria-hidden="true" />
+      <Hotspot label="Burn the teaching building" x={52} y={38} width={14} height={31} onClick={onAdvance}>
+        <span aria-hidden="true" />
       </Hotspot>
 
-      <Hotspot label="Enter at the ashtray" x={43} y={63} width={9} height={14} variant="ember" onClick={onEnterHub}>
+      <Hotspot label="Enter at the ashtray" x={52} y={78} width={10} height={15} variant="ember" onClick={onEnterHub}>
         <span className="red-dot" aria-hidden="true" />
       </Hotspot>
 
@@ -32,7 +27,7 @@ export function IntroCampusMap({ step, onAdvance, onEnterHub }) {
           <span>Steak and influence papers will occupy this state in the artwork pass.</span>
         </div>
       ) : null}
-      <Hand tool={transformed ? 'fork' : 'cigarette'} active={transformed} />
+      <Hand tool={transformed ? 'fork' : 'cigarette'} active={transformed} src={transformed ? undefined : cigaretteHand} />
     </Scene>
   )
 }

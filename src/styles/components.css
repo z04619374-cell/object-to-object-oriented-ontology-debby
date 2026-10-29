@@ -15,6 +15,9 @@
 .scene--black .scene__caption p, .scene--black .scene__caption h1, .scene--black .scene__index { color: rgba(220,216,197,.72); }
 
 .illustration { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h); transform: translate(-50%, -50%); pointer-events: none; }
+.scene-art { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; user-select: none; }
+.scene-art--burned { animation: image-burn-in .85s var(--ease) both; filter: brightness(.82) sepia(.18); }
+.scene-art--moving { animation: road-drive 2.2s ease-in forwards; transform-origin: 50% 36%; }
 .hotspot { position: absolute; left: var(--x); top: var(--y); z-index: 20; width: var(--w); height: var(--h); transform: translate(-50%, -50%); border: 0; padding: 0; background: transparent; cursor: crosshair; }
 .hotspot::after { content: ''; position: absolute; inset: 4%; border: 1px solid transparent; transition: border-color .25s ease, background .25s ease; }
 .hotspot:hover::after, .hotspot:focus-visible::after { border-color: rgba(30,30,25,.44); background: rgba(225,218,195,.06); }
@@ -30,6 +33,8 @@
 
 .hand { position: absolute; z-index: 42; right: -2%; bottom: -8%; width: 29%; height: 30%; transform: rotate(-8deg); transform-origin: 100% 100%; pointer-events: none; transition: transform .45s var(--ease); filter: drop-shadow(0 1rem 1rem rgba(0,0,0,.18)); }
 .hand--active { transform: rotate(-13deg) translate(-1%, -2%); }
+.hand-asset { position: absolute; inset: 0; z-index: 18; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; }
+.hand-asset--active { transform: translate(-.4%, -.35%) scale(1.012); transform-origin: center; }
 .hand__wrist { position: absolute; right: -5%; bottom: 0; width: 84%; height: 50%; border-radius: 55% 8% 0 45%; background: #b9a895; }
 .hand__finger { position: absolute; right: 46%; bottom: 38%; width: 49%; height: 17%; border-radius: 60% 18% 30% 60%; background: #c1af9b; transform: rotate(-7deg); }
 .hand__tool { position: absolute; left: -4%; bottom: 52%; width: 51%; height: 4%; border-radius: 10% 45% 45% 10%; background: #ded8c1; transform: rotate(-7deg); box-shadow: inset -1.2rem 0 0 #9c6742; }
@@ -143,6 +148,8 @@
 @keyframes transition-blackout { 0%, 35% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes transition-burn { 0% { opacity: 1; transform: scale(.25); } 100% { opacity: 0; transform: scale(4); } }
 @keyframes road-flicker { 0%,100% { filter: brightness(1); } 50% { filter: brightness(.83); } }
+@keyframes image-burn-in { 0% { opacity: .35; filter: brightness(.4) sepia(.9); } 100% { opacity: 1; filter: brightness(.82) sepia(.18); } }
+@keyframes road-drive { 0% { filter: brightness(1); transform: scale(1); } 100% { filter: brightness(.16) blur(2px); transform: scale(1.11); } }
 @keyframes spark { 0% { opacity: 1; transform: rotate(var(--r, 0)) scaleY(.15); } 100% { opacity: 0; transform: rotate(var(--r, 0)) scaleY(1.2); } }
 @keyframes star-burst { 0%,100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-50%) scale(4.5); opacity: .35; } }
 
