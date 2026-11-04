@@ -58,10 +58,6 @@ export function experienceReducer(state, action) {
       return { ...state, step: Math.max(0, action.step ?? 0) }
     case 'RESET_SCENE':
       return nextScene(state, state.scene, action.transition)
-    case 'OPEN_PAPERS':
-      return state.scene === SCENES.INTRO ? { ...state, step: 3 } : state
-    case 'CLOSE_PAPERS':
-      return state.scene === SCENES.INTRO ? { ...state, step: 2 } : state
     case 'RESET':
       return initialExperienceState
     default:

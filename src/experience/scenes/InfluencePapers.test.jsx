@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { InfluencePapers } from './InfluencePapers'
 
 describe('InfluencePapers', () => {
   it('opens any paper independently and shows only its approved text', async () => {
     const user = userEvent.setup()
-    const { container } = render(<InfluencePapers onClose={() => {}} />)
+    const { container } = render(<InfluencePapers />)
 
     await user.click(screen.getByRole('button', { name: /open disco elysium paper/i }))
 
@@ -17,24 +17,23 @@ describe('InfluencePapers', () => {
     expect(container.querySelector('.paper-detail--readable')).toBeInTheDocument()
   })
 
-  it('closes a focused paper with Escape without leaving the papers', async () => {
+  it('closes a focused paper with Escape while leaving the paper objects in place', async () => {
     const user = userEvent.setup()
-    const onClose = vi.fn()
-    render(<InfluencePapers onClose={onClose} />)
+    render(<InfluencePapers />)
 
     await user.click(screen.getByRole('button', { name: /open teamlab.*paper/i }))
     await user.keyboard('{Escape}')
 
     expect(screen.queryByText('teamLab Borderless')).not.toBeInTheDocument()
-    expect(onClose).not.toHaveBeenCalled()
+    expect(screen.getAllByRole('button', { name: /open .* paper/i })).toHaveLength(3)
   })
 
-  it('returns to the steak from the empty background with no completion gate', async () => {
+  it('closes a focused paper by clicking outside it', async () => {
     const user = userEvent.setup()
-    const onClose = vi.fn()
-    render(<InfluencePapers onClose={onClose} />)
+    render(<InfluencePapers />)
 
-    await user.click(screen.getByRole('button', { name: /return to steak/i }))
-    expect(onClose).toHaveBeenCalledOnce()
+    await user.click(screen.getByRole('button', { name: /open what remains of edith finch paper/i }))
+    await user.click(screen.getByRole('button', { name: /close paper/i }))
+    expect(screen.queryByText('What Remains of Edith Finch')).not.toBeInTheDocument()
   })
 })

@@ -6,9 +6,7 @@ import { OneShotVideo } from '../components/OneShotVideo'
 import { Scene } from '../components/Scene'
 import { InfluencePapers } from './InfluencePapers'
 
-export function IntroCampusMap({ step, onAdvance, onEnterBase, onOpenPapers, onClosePapers }) {
-  if (step === 3) return <InfluencePapers onClose={onClosePapers} />
-
+export function IntroCampusMap({ step, onAdvance, onEnterBase }) {
   return (
     <Scene id="intro" label="Campus map">
       {step === 0 ? (
@@ -28,8 +26,8 @@ export function IntroCampusMap({ step, onAdvance, onEnterBase, onOpenPapers, onC
       {step === 2 ? (
         <>
           <ArtworkLayer src={ASSETS.intro.steakMap} alt="T-bone steak map" />
-          <Hotspot label="Open influence papers" x={50} y={52} width={70} height={82} onClick={onOpenPapers} />
           <Hand src={ASSETS.hands.cigarette} />
+          <InfluencePapers />
         </>
       ) : null}
 

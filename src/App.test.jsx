@@ -61,17 +61,17 @@ describe('Ashtray interactive narrative', () => {
     expect(container.querySelector('.transition-overlay')).not.toBeInTheDocument()
   })
 
-  it('opens papers optionally after the map burn and can return to the steak', async () => {
+  it('opens papers over the steak without replacing the scene', async () => {
     const user = userEvent.setup()
     render(<App />)
 
     await user.click(screen.getByRole('button', { name: /burn the teaching building/i }))
     fireEvent.ended(screen.getByLabelText(/map burning/i))
-    await user.click(screen.getByRole('button', { name: /open influence papers/i }))
+    expect(screen.getByRole('img', { name: /t-bone steak map/i })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /open disco elysium paper/i }))
     expect(screen.getByText('Disco Elysium')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /t-bone steak map/i })).toBeInTheDocument()
     await user.keyboard('{Escape}')
-    await user.click(screen.getByRole('button', { name: /return to steak/i }))
     expect(screen.getByRole('img', { name: /t-bone steak map/i })).toBeInTheDocument()
   })
 

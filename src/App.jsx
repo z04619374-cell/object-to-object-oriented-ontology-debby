@@ -32,8 +32,6 @@ export default function App() {
         step={state.step}
         onAdvance={advance}
         onEnterBase={() => dispatch({ type: 'ENTER_BASE' })}
-        onOpenPapers={() => dispatch({ type: 'OPEN_PAPERS' })}
-        onClosePapers={() => dispatch({ type: 'CLOSE_PAPERS' })}
       />
     ),
     [SCENES.ROAD]: <RoadScene {...sceneProps} onReturn={() => resetScene(TRANSITIONS.BLACKOUT)} />,

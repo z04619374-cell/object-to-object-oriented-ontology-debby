@@ -62,17 +62,6 @@ describe('experienceReducer', () => {
     expect(next).toMatchObject({ scene: SCENES.ROAD, step: 0, transition: TRANSITIONS.BLACKOUT })
   })
 
-  it('opens and closes optional papers without a visited gate', () => {
-    const opened = experienceReducer(
-      { ...initialExperienceState, step: 2 },
-      { type: 'OPEN_PAPERS' },
-    )
-    const closed = experienceReducer(opened, { type: 'CLOSE_PAPERS' })
-
-    expect(opened).toMatchObject({ scene: SCENES.INTRO, step: 3 })
-    expect(closed).toMatchObject({ scene: SCENES.INTRO, step: 2 })
-  })
-
   it('ignores invalid base navigation', () => {
     const current = { ...initialExperienceState, scene: SCENES.ROAD }
 
