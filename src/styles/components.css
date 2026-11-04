@@ -1,5 +1,5 @@
 .experience { min-height: 100svh; display: grid; place-items: center; background: #050605; overflow: hidden; }
-.experience__frame { width: 100%; animation: scene-arrive .65s var(--ease) both; }
+.experience__frame { width: 100%; }
 .scene { min-height: 100svh; display: grid; place-items: center; padding: clamp(.5rem, 2.5vw, 2rem); background: radial-gradient(circle at 50% 30%, #25261f 0, var(--coal) 48%, var(--coal-deep) 100%); }
 .scene__stage { position: relative; width: min(100%, calc((100svh - clamp(1rem, 5vw, 4rem)) * 16 / 9)); aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--line); background: #848475; box-shadow: 0 2.5rem 7rem rgba(0,0,0,.55); isolation: isolate; }
 .scene__stage::before { content: ''; position: absolute; inset: 0; z-index: 50; pointer-events: none; background: radial-gradient(ellipse at center, transparent 45%, rgba(8,9,7,.12) 72%, rgba(4,5,4,.62) 118%); }
@@ -16,6 +16,8 @@
 .base-arrow:hover, .base-arrow:focus-visible { opacity: 1; }
 .base-arrow--left { left: 1.5%; }
 .base-arrow--right { right: 1.5%; }
+.base-arrow--up { top: 1.5%; left: 50%; transform: translateX(-50%); }
+.base-arrow--down { top: auto; bottom: 1.5%; left: 54%; transform: translateX(-50%); }
 .base-arrow img { width: 100%; height: 100%; object-fit: contain; }
 .scene__caption { position: absolute; top: 4.5%; left: 4%; z-index: 60; max-width: 36%; pointer-events: none; }
 .scene__caption p { margin: 0 0 .5rem; color: rgba(24,25,21,.68); font: clamp(.42rem, .65vw, .68rem)/1.2 var(--mono); letter-spacing: .16em; text-transform: uppercase; }
@@ -171,7 +173,6 @@
 .transition-overlay--blackout { animation: transition-blackout 1s ease both; }
 .transition-overlay--burn { background: radial-gradient(circle at 70% 60%, transparent 0 8%, #26140d 12%, #050605 21%); animation: transition-burn .85s ease both; }
 
-@keyframes scene-arrive { from { opacity: 0; transform: scale(1.012); } to { opacity: 1; transform: none; } }
 @keyframes transition-fade { 0% { opacity: .8; } 100% { opacity: 0; } }
 @keyframes transition-zoom { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.3); } }
 @keyframes transition-focus { 0% { opacity: 1; transform: scale(.4); } 100% { opacity: 0; transform: scale(2.8); } }

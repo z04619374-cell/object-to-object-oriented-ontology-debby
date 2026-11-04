@@ -1,5 +1,4 @@
 import { useReducer } from 'react'
-import { TransitionOverlay } from './experience/components/TransitionOverlay'
 import {
   experienceReducer,
   initialExperienceState,
@@ -48,7 +47,6 @@ export default function App() {
       <div className="experience__frame" key={`${state.scene}-${state.revision}`}>
         {scenes[state.scene]}
       </div>
-      <TransitionOverlay type={state.transition} revision={state.revision} />
     </main>
   )
 }

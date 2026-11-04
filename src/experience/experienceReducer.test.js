@@ -22,6 +22,22 @@ describe('experienceReducer', () => {
     expect(next).toMatchObject({ scene: SCENES.CITY, step: 0, transition: TRANSITIONS.FADE })
   })
 
+  it('navigates down to the opposite base scene', () => {
+    const next = experienceReducer(
+      { ...initialExperienceState, scene: SCENES.ROAD, step: 0 },
+      { type: 'NAVIGATE_BASE', direction: 'down' },
+    )
+    expect(next).toMatchObject({ scene: SCENES.TREE, step: 0 })
+  })
+
+  it('navigates up from a base scene to map1', () => {
+    const next = experienceReducer(
+      { ...initialExperienceState, scene: SCENES.CITY, step: 0 },
+      { type: 'NAVIGATE_BASE', direction: 'up' },
+    )
+    expect(next).toMatchObject({ scene: SCENES.INTRO, step: 0 })
+  })
+
   it('advances only the local scene step', () => {
     const next = experienceReducer(
       { ...initialExperienceState, scene: SCENES.CITY, step: 1 },
@@ -60,6 +76,6 @@ describe('experienceReducer', () => {
   it('ignores invalid base navigation', () => {
     const current = { ...initialExperienceState, scene: SCENES.ROAD }
 
-    expect(experienceReducer(current, { type: 'NAVIGATE_BASE', direction: 'up' })).toBe(current)
+    expect(experienceReducer(current, { type: 'NAVIGATE_BASE', direction: 'diagonal' })).toBe(current)
   })
 })

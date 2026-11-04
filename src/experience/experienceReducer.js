@@ -1,4 +1,4 @@
-import { getAdjacentBaseScene } from './baseSceneNavigation'
+import { getAdjacentBaseScene, getOppositeBaseScene } from './baseSceneNavigation'
 
 export const SCENES = Object.freeze({
   INTRO: 'intro',
@@ -43,7 +43,12 @@ export function experienceReducer(state, action) {
     case 'ENTER_BASE':
       return nextScene(state, action.scene ?? SCENES.ROAD, action.transition ?? TRANSITIONS.ZOOM)
     case 'NAVIGATE_BASE': {
-      const destination = getAdjacentBaseScene(state.scene, action.direction)
+      if (state.scene === SCENES.INTRO) return state
+      const destination = action.direction === 'up'
+        ? SCENES.INTRO
+        : action.direction === 'down'
+          ? getOppositeBaseScene(state.scene)
+          : getAdjacentBaseScene(state.scene, action.direction)
       return destination ? nextScene(state, destination, action.transition) : state
     }
     case 'ADVANCE':

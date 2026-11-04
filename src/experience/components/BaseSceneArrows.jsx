@@ -14,6 +14,12 @@ export function BaseSceneArrows({ scene, onNavigate }) {
       <button className="base-arrow base-arrow--right" type="button" aria-label="Look right" onClick={() => onNavigate('right')}>
         <img src={ASSETS.navigation.arrow} alt="" aria-hidden="true" draggable="false" style={{ transform: 'rotate(90deg)' }} />
       </button>
+      <button className="base-arrow base-arrow--up" type="button" aria-label="Look up" onClick={() => onNavigate('up')}>
+        <img src={ASSETS.navigation.arrow} alt="" aria-hidden="true" draggable="false" style={{ transform: 'rotate(0deg)' }} />
+      </button>
+      <button className="base-arrow base-arrow--down" type="button" aria-label="Look down" onClick={() => onNavigate('down')}>
+        <img src={ASSETS.navigation.arrow} alt="" aria-hidden="true" draggable="false" style={{ transform: 'rotate(180deg)' }} />
+      </button>
     </div>
   )
 }

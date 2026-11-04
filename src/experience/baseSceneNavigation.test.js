@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { BASE_SCENES, getAdjacentBaseScene } from './baseSceneNavigation'
+import { BASE_SCENES, getAdjacentBaseScene, getOppositeBaseScene } from './baseSceneNavigation'
 
 describe('base scene navigation', () => {
   it('uses the approved street, road, city, campus loop', () => {
@@ -22,5 +22,14 @@ describe('base scene navigation', () => {
   it('rejects unknown scenes and directions', () => {
     expect(getAdjacentBaseScene('intro', 'left')).toBeNull()
     expect(getAdjacentBaseScene('road', 'up')).toBeNull()
+  })
+
+  it.each([
+    ['road', 'tree'],
+    ['tree', 'road'],
+    ['statue', 'city'],
+    ['city', 'statue'],
+  ])('maps %s down to the opposite %s', (scene, opposite) => {
+    expect(getOppositeBaseScene(scene)).toBe(opposite)
   })
 })

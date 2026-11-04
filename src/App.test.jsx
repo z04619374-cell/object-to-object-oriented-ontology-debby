@@ -50,6 +50,17 @@ describe('Ashtray interactive narrative', () => {
     expect(screen.getByRole('heading', { name: /road and car/i })).toBeInTheDocument()
   })
 
+  it('moves down to the opposite scene and up to map1 without a blackout overlay', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+    await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
+    await user.click(screen.getByRole('button', { name: /look down/i }))
+    expect(screen.getByRole('heading', { name: /campus trees/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /look up/i }))
+    expect(screen.getByRole('img', { name: /illustrated rmit campus map/i })).toBeInTheDocument()
+    expect(container.querySelector('.transition-overlay')).not.toBeInTheDocument()
+  })
+
   it('opens papers optionally after the map burn and can return to the steak', async () => {
     const user = userEvent.setup()
     render(<App />)
