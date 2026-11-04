@@ -1,22 +1,35 @@
+import { ASSETS } from '../assetManifest'
+import { SCENES } from '../experienceReducer'
+import { ArtworkLayer } from '../components/ArtworkLayer'
+import { BaseSceneArrows } from '../components/BaseSceneArrows'
+import { FullSceneAction } from '../components/FullSceneAction'
 import { Hand } from '../components/Hand'
 import { Hotspot } from '../components/Hotspot'
-import { IllustrationLayer } from '../components/IllustrationLayer'
-import { ReturnHotspot } from '../components/ReturnHotspot'
 import { Scene } from '../components/Scene'
 
-export function TreeScene({ step, onAdvance, onReturn }) {
+export function TreeScene({ step, onAdvance, onReturn, onNavigateBase }) {
   return (
-    <Scene id="tree" title="Knowledge" subtitle="A branch remembers the question" tone="forest">
-      <IllustrationLayer x={50} y={52} width={100} height={100} className={`forest${step > 0 ? ' forest--lit' : ''}`}>
-        {Array.from({ length: 9 }, (_, index) => <i key={index} style={{ '--i': index }} />)}
-      </IllustrationLayer>
-      <IllustrationLayer x={57} y={48} width={48} height={10} className={`branch${step > 1 ? ' branch--focus' : ''}`} />
-      <Hotspot label={step === 0 ? 'Light the torch' : 'Approach the apple'} x={68} y={43} width={18} height={27} onClick={onAdvance}>
-        <span className={`apple${step > 1 ? ' apple--revealed' : ''}`} aria-hidden="true" />
-      </Hotspot>
-      <p className="scene-thought">{step > 1 ? 'One answer. Still out of reach.' : 'The leaves withhold their names.'}</p>
-      <ReturnHotspot onReturn={onReturn} />
-      <Hand tool={step > 0 ? 'torch' : 'cigarette'} active={step > 0} />
+    <Scene id="tree" label="Campus trees" tone="forest">
+      {step <= 1 ? (
+        <>
+          <ArtworkLayer src={ASSETS.tree.base} alt="Dense campus trees" />
+          <Hotspot label={step === 0 ? 'Light the trees' : 'Focus on the branch'} x={58} y={43} width={72} height={72} onClick={onAdvance} />
+          <BaseSceneArrows scene={SCENES.TREE} onNavigate={onNavigateBase} />
+          <Hand active={step === 1} src={step === 1 ? ASSETS.hands.torch : ASSETS.hands.cigarette} />
+        </>
+      ) : null}
+      {step === 2 ? (
+        <>
+          <ArtworkLayer src={ASSETS.tree.branch} alt="Tree branch with one apple" />
+          <Hotspot label="Approach the apple" x={61} y={42} width={32} height={42} onClick={onAdvance} />
+          <Hand active src={ASSETS.hands.torch} />
+        </>
+      ) : null}
+      {step === 3 ? (
+        <FullSceneAction label="Return to campus" onClick={onReturn}>
+          <ArtworkLayer src={ASSETS.tree.apple} alt="One apple on a branch" />
+        </FullSceneAction>
+      ) : null}
     </Scene>
   )
 }

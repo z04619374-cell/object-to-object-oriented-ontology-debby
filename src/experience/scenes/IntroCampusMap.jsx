@@ -1,33 +1,40 @@
+import { ASSETS } from '../assetManifest'
+import { ArtworkLayer } from '../components/ArtworkLayer'
 import { Hand } from '../components/Hand'
 import { Hotspot } from '../components/Hotspot'
+import { OneShotVideo } from '../components/OneShotVideo'
 import { Scene } from '../components/Scene'
-import { assetPath } from '../../utils/assetPath'
+import { InfluencePapers } from './InfluencePapers'
 
-export function IntroCampusMap({ step, onAdvance, onEnterHub }) {
-  const transformed = step > 0
-  const base = import.meta.env.BASE_URL
-  const mapSrc = assetPath(base, transformed ? 'art/intro/campus-map-b.jpg' : 'art/intro/campus-map-a.jpg')
-  const cigaretteHand = assetPath(base, 'art/shared/cigarette-hand.png')
+export function IntroCampusMap({ step, onAdvance, onEnterBase, onOpenPapers, onClosePapers }) {
+  if (step === 3) return <InfluencePapers onClose={onClosePapers} />
 
   return (
-    <Scene id="intro" title="Campus fragment" subtitle="A location remembered incompletely">
-      <img className={`scene-art${transformed ? ' scene-art--burned' : ''}`} src={mapSrc} alt="Illustrated RMIT campus map" />
-
-      <Hotspot label="Burn the teaching building" x={52} y={38} width={14} height={31} onClick={onAdvance}>
-        <span aria-hidden="true" />
-      </Hotspot>
-
-      <Hotspot label="Enter at the ashtray" x={52} y={78} width={10} height={15} variant="ember" onClick={onEnterHub}>
-        <span className="red-dot" aria-hidden="true" />
-      </Hotspot>
-
-      {transformed ? (
-        <div className="scene-message scene-message--paper">
-          <p>The plan curls inward.</p>
-          <span>Steak and influence papers will occupy this state in the artwork pass.</span>
-        </div>
+    <Scene id="intro" label="Campus map">
+      {step === 0 ? (
+        <>
+          <ArtworkLayer src={ASSETS.intro.map} alt="Illustrated RMIT campus map" />
+          <Hotspot label="Burn the teaching building" x={51} y={43} width={18} height={48} onClick={onAdvance} />
+        </>
       ) : null}
-      <Hand tool={transformed ? 'fork' : 'cigarette'} active={transformed} src={transformed ? undefined : cigaretteHand} />
+
+      {step === 1 ? (
+        <OneShotVideo src={ASSETS.media.mapBurn} label="Map burning" onEnded={onAdvance} />
+      ) : null}
+
+      {step === 2 ? (
+        <>
+          <ArtworkLayer src={ASSETS.intro.steakMap} alt="T-bone steak map" />
+          <Hotspot label="Open influence papers" x={50} y={52} width={70} height={82} onClick={onOpenPapers} />
+        </>
+      ) : null}
+
+      {step !== 1 ? (
+        <Hotspot label="Enter at the ashtray" x={51} y={77} width={11} height={18} variant="ember" onClick={onEnterBase}>
+          <img className="red-point-asset" src={ASSETS.intro.redPoint} alt="" aria-hidden="true" />
+        </Hotspot>
+      ) : null}
+      {step === 0 ? <Hand active src={ASSETS.hands.cigarette} /> : null}
     </Scene>
   )
 }

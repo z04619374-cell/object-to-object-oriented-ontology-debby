@@ -1,23 +1,52 @@
+import { useState } from 'react'
+import { ASSETS } from '../assetManifest'
+import { SCENES } from '../experienceReducer'
+import { ArtworkLayer } from '../components/ArtworkLayer'
+import { BaseSceneArrows } from '../components/BaseSceneArrows'
+import { FullSceneAction } from '../components/FullSceneAction'
 import { Hand } from '../components/Hand'
 import { Hotspot } from '../components/Hotspot'
-import { IllustrationLayer } from '../components/IllustrationLayer'
-import { ReturnHotspot } from '../components/ReturnHotspot'
+import { OneShotVideo } from '../components/OneShotVideo'
 import { Scene } from '../components/Scene'
 
-export function StatueScene({ step, onAdvance, onReturn }) {
+const PEDESTRIAN_HOTSPOTS = [
+  [35.3, 59.5, 2.5, 10], [33.8, 66.5, 2.5, 15], [35.8, 84.5, 3.5, 22],
+  [39.3, 84, 4.5, 25], [29.7, 98, 5, 5], [46.8, 96, 5, 8],
+]
+
+export function StatueScene({ step, onAdvance, onReturn, onNavigateBase }) {
+  const [transformed, setTransformed] = useState(() => new Set())
+  const transformPedestrian = (index) => setTransformed((current) => new Set(current).add(index))
+
   return (
-    <Scene id="statue" title="Authority" subtitle="A monument with nothing to say">
-      <IllustrationLayer x={50} y={72} width={100} height={45} className="plaza" />
-      <Hotspot label="Reduce the pedestrians to lines" x={24} y={60} width={28} height={37} onClick={onAdvance}>
-        <span className={`pedestrians${step > 0 ? ' pedestrians--lines' : ''}`} aria-hidden="true"><i /><i /><i /></span>
-      </Hotspot>
-      <Hotspot label="Open the statue's head" x={64} y={48} width={24} height={58} onClick={onAdvance}>
-        <span className={`statue-shape${step > 1 ? ' statue-shape--open' : ''}`} aria-hidden="true"><i /></span>
-      </Hotspot>
-      {step > 1 ? <div className="firework firework--statue" aria-hidden="true"><i /><i /><i /><i /></div> : null}
-      <p className="scene-thought">{step > 1 ? 'The answer is only light and noise.' : 'Whose thought survives the bronze?'}</p>
-      <ReturnHotspot onReturn={onReturn} />
-      <Hand tool={step > 0 ? 'gun' : 'cigarette'} active={step > 1} />
+    <Scene id="statue" label="Street and statue">
+      {step === 0 ? (
+        <>
+          <ArtworkLayer src={ASSETS.statue.base} alt="Street with pedestrians and statue" />
+          {ASSETS.statue.pedestrians.map((src, index) => transformed.has(index) ? (
+            <ArtworkLayer className="pedestrian-layer" src={src} key={src} />
+          ) : null)}
+          {PEDESTRIAN_HOTSPOTS.map(([x, y, width, height], index) => (
+            <Hotspot key={index} label={`Transform pedestrian ${index + 1}`} x={x} y={y} width={width} height={height} onClick={() => transformPedestrian(index)} />
+          ))}
+          <Hotspot label="Approach the statue" x={18} y={31} width={16} height={45} onClick={onAdvance} />
+          <BaseSceneArrows scene={SCENES.STATUE} onNavigate={onNavigateBase} />
+          <Hand src={ASSETS.hands.cigarette} />
+        </>
+      ) : null}
+      {step === 1 ? (
+        <>
+          <ArtworkLayer src={ASSETS.statue.focus} alt="Close view of the statue" />
+          <Hotspot label="Open the statue head" x={50} y={25} width={25} height={31} onClick={onAdvance} />
+          <Hand src={ASSETS.hands.gun} />
+        </>
+      ) : null}
+      {step === 2 ? <OneShotVideo src={ASSETS.media.statueFirework} label="Statue firework" onEnded={onAdvance} /> : null}
+      {step === 3 ? (
+        <FullSceneAction label="Return to the street" onClick={onReturn}>
+          <ArtworkLayer src={ASSETS.statue.focus} alt="Statue after the firework" />
+        </FullSceneAction>
+      ) : null}
     </Scene>
   )
 }

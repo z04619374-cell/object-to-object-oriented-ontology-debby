@@ -5,6 +5,18 @@
 .scene__stage::before { content: ''; position: absolute; inset: 0; z-index: 50; pointer-events: none; background: radial-gradient(ellipse at center, transparent 45%, rgba(8,9,7,.12) 72%, rgba(4,5,4,.62) 118%); }
 .scene__stage::after { content: ''; position: absolute; inset: 0; z-index: 51; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), inset 0 0 5rem rgba(0,0,0,.18); }
 .scene__grain { position: absolute; inset: 0; z-index: 49; pointer-events: none; opacity: .1; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"); mix-blend-mode: multiply; }
+.artwork-layer, .one-shot-video { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; }
+.artwork-layer { z-index: 1; pointer-events: none; }
+.artwork-layer--contain { object-fit: contain; }
+.artwork-layer--cover { object-fit: cover; }
+.one-shot-video { z-index: 15; object-fit: contain; background: #000; }
+.video-retry, .full-scene-action { position: absolute; inset: 0; z-index: 25; width: 100%; height: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; }
+.base-arrows { position: absolute; inset: 0; z-index: 35; pointer-events: none; }
+.base-arrow { position: absolute; top: 50%; width: 8%; aspect-ratio: 1; border: 0; padding: 0; background: transparent; transform: translateY(-50%); cursor: pointer; pointer-events: auto; opacity: .72; transition: opacity .2s ease, transform .2s ease; }
+.base-arrow:hover, .base-arrow:focus-visible { opacity: 1; }
+.base-arrow--left { left: 1.5%; }
+.base-arrow--right { right: 1.5%; }
+.base-arrow img { width: 100%; height: 100%; object-fit: contain; }
 .scene__caption { position: absolute; top: 4.5%; left: 4%; z-index: 60; max-width: 36%; pointer-events: none; }
 .scene__caption p { margin: 0 0 .5rem; color: rgba(24,25,21,.68); font: clamp(.42rem, .65vw, .68rem)/1.2 var(--mono); letter-spacing: .16em; text-transform: uppercase; }
 .scene__caption h1 { margin: 0; color: #191a17; font: 400 clamp(1.2rem, 2.6vw, 3rem)/.9 var(--serif); letter-spacing: -.045em; }
@@ -60,6 +72,24 @@
 .map__label { position: absolute; left: 45%; top: 10%; color: rgba(35,35,31,.5); font: clamp(.36rem, .55vw, .62rem)/1 var(--mono); letter-spacing: .22em; writing-mode: vertical-rl; }
 .placeholder-building { position: absolute; inset: 7%; border: 1px solid rgba(25,25,22,.45); background: repeating-linear-gradient(90deg, rgba(55,56,48,.15) 0 12%, transparent 12% 20%); transform: rotate(1deg); }
 .red-dot { position: absolute; left: 50%; top: 50%; width: clamp(.8rem, 1.8vw, 1.7rem); aspect-ratio: 1; border-radius: 50%; background: var(--ember); transform: translate(-50%, -50%); box-shadow: 0 0 0 .2rem rgba(167,46,32,.15), 0 0 1.2rem rgba(167,46,32,.42); }
+.red-point-asset { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.papers-backdrop { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; background: #090909; }
+.paper-scatter { position: absolute; inset: 0; z-index: 5; transition: opacity .25s ease; pointer-events: none; }
+.paper-scatter--dimmed { opacity: .16; }
+.paper-object { position: absolute; width: 31%; height: 48%; border: 0; padding: 0; background: transparent; cursor: pointer; pointer-events: auto; }
+.paper-object img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 1.2rem 1.6rem rgba(0,0,0,.45)); }
+.paper-object--1 { left: 7%; top: 25%; transform: rotate(-7deg); }
+.paper-object--2 { left: 34%; top: 10%; transform: rotate(4deg); }
+.paper-object--3 { right: 7%; top: 28%; transform: rotate(9deg); }
+.paper-detail { position: absolute; z-index: 20; left: 50%; top: 50%; width: 62%; height: 84%; transform: translate(-50%,-50%) rotate(-.8deg); color: #23231f; filter: drop-shadow(0 1.8rem 2.8rem rgba(0,0,0,.64)); }
+.paper-detail--readable { background: #d8d6cd; clip-path: polygon(3% 7%, 12% 2%, 29% 5%, 43% 1%, 59% 5%, 77% 2%, 96% 8%, 98% 29%, 95% 46%, 99% 64%, 95% 92%, 78% 97%, 61% 94%, 43% 99%, 25% 95%, 5% 98%, 2% 78%, 5% 59%, 1% 39%); }
+.paper-detail__texture { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; opacity: .26; mix-blend-mode: multiply; }
+.paper-detail__content { position: absolute; z-index: 1; inset: 12% 15%; display: grid; grid-template-columns: .75fr 1.25fr; grid-template-rows: auto auto 1fr; gap: 2% 7%; align-content: center; }
+.paper-detail__creator { margin: 0; align-self: end; font: 600 clamp(.55rem, 1.15vw, 1.1rem)/1.2 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+.paper-detail h2 { grid-column: 1; margin: 0; font: 400 clamp(1rem, 2.3vw, 2.4rem)/1 var(--serif); }
+.paper-detail__work { grid-column: 2; grid-row: 1 / span 3; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.18) contrast(.92); }
+.paper-detail__content > p:last-child { grid-column: 1; margin: 8% 0 0; font: clamp(.52rem, .82vw, .82rem)/1.55 var(--sans); }
+.billboard-focus-art, .burn-hole-layer { transform: scale(1.55); transform-origin: 18% 30%; }
 .scene-message { position: absolute; z-index: 35; left: 8%; bottom: 10%; width: 26%; padding: 1rem; color: #292a25; background: rgba(214,208,186,.88); transform: rotate(-2deg); box-shadow: .5rem .8rem 1.5rem rgba(0,0,0,.15); }
 .scene-message p { margin: 0 0 .5rem; font: italic clamp(.7rem, 1.2vw, 1.15rem)/1.2 var(--serif); }
 .scene-message span { color: rgba(35,35,31,.68); font: clamp(.38rem, .56vw, .58rem)/1.5 var(--mono); }
@@ -155,7 +185,12 @@
 
 @media (max-width: 700px) {
   .scene { padding: 0; background: #050605; }
-  .scene__stage { width: 100vw; max-height: 100svh; border: 0; }
+  .scene__stage { width: min(100vw, calc(100svh * 16 / 9)); border: 0; }
+  .paper-detail { width: 94%; height: 94%; }
+  .paper-detail__content { inset: 8% 9%; grid-template-columns: .9fr 1.1fr; gap: 2% 4%; }
+  .paper-detail__creator { font-size: .65rem; }
+  .paper-detail h2 { font-size: .9rem; }
+  .paper-detail__content > p:last-child { min-height: 0; overflow-y: auto; font-size: .62rem; line-height: 1.3; }
   .scene__caption { max-width: 48%; }
   .scene__caption p { letter-spacing: .08em; }
   .scene__caption h1 { font-size: clamp(1rem, 5vw, 1.8rem); }
@@ -166,5 +201,5 @@
 
 @media (max-aspect-ratio: 4/5) {
   .experience { align-items: center; }
-  .scene__stage { width: 100vw; height: auto; }
+  .scene__stage { width: min(100vw, calc(100svh * 16 / 9)); height: auto; }
 }

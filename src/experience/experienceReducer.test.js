@@ -7,24 +7,19 @@ import {
 } from './experienceReducer'
 
 describe('experienceReducer', () => {
-  it('enters the ashtray hub from the campus map', () => {
-    const next = experienceReducer(initialExperienceState, { type: 'ENTER_HUB' })
+  it('enters the road base directly from the campus map', () => {
+    const next = experienceReducer(initialExperienceState, { type: 'ENTER_BASE' })
 
-    expect(next).toMatchObject({ scene: SCENES.HUB, step: 0, transition: TRANSITIONS.ZOOM })
+    expect(next).toMatchObject({ scene: SCENES.ROAD, step: 0, transition: TRANSITIONS.ZOOM })
   })
 
-  it.each([
-    [SCENES.ROAD, TRANSITIONS.FADE],
-    [SCENES.STATUE, TRANSITIONS.FOCUS],
-    [SCENES.TREE, TRANSITIONS.ZOOM],
-    [SCENES.CITY, TRANSITIONS.FADE],
-  ])('navigates from the hub to %s', (scene, transition) => {
+  it('navigates between adjacent base scenes and resets branch progress', () => {
     const next = experienceReducer(
-      { ...initialExperienceState, scene: SCENES.HUB },
-      { type: 'NAVIGATE', scene, transition },
+      { ...initialExperienceState, scene: SCENES.ROAD, step: 4 },
+      { type: 'NAVIGATE_BASE', direction: 'right' },
     )
 
-    expect(next).toMatchObject({ scene, step: 0, transition })
+    expect(next).toMatchObject({ scene: SCENES.CITY, step: 0, transition: TRANSITIONS.FADE })
   })
 
   it('advances only the local scene step', () => {
@@ -42,18 +37,29 @@ describe('experienceReducer', () => {
     expect(experienceReducer(current, { type: 'ADVANCE', fromStep: 1 })).toBe(current)
   })
 
-  it('returns every branch to the ashtray hub with its requested transition', () => {
+  it('resets a branch to its own base scene', () => {
     const next = experienceReducer(
       { ...initialExperienceState, scene: SCENES.ROAD, step: 3 },
-      { type: 'RETURN_HUB', transition: TRANSITIONS.BLACKOUT },
+      { type: 'RESET_SCENE', transition: TRANSITIONS.BLACKOUT },
     )
 
-    expect(next).toMatchObject({ scene: SCENES.HUB, step: 0, transition: TRANSITIONS.BLACKOUT })
+    expect(next).toMatchObject({ scene: SCENES.ROAD, step: 0, transition: TRANSITIONS.BLACKOUT })
   })
 
-  it('ignores navigation to an unknown scene', () => {
-    const current = { ...initialExperienceState, scene: SCENES.HUB }
+  it('opens and closes optional papers without a visited gate', () => {
+    const opened = experienceReducer(
+      { ...initialExperienceState, step: 2 },
+      { type: 'OPEN_PAPERS' },
+    )
+    const closed = experienceReducer(opened, { type: 'CLOSE_PAPERS' })
 
-    expect(experienceReducer(current, { type: 'NAVIGATE', scene: 'unknown' })).toBe(current)
+    expect(opened).toMatchObject({ scene: SCENES.INTRO, step: 3 })
+    expect(closed).toMatchObject({ scene: SCENES.INTRO, step: 2 })
+  })
+
+  it('ignores invalid base navigation', () => {
+    const current = { ...initialExperienceState, scene: SCENES.ROAD }
+
+    expect(experienceReducer(current, { type: 'NAVIGATE_BASE', direction: 'up' })).toBe(current)
   })
 })

@@ -1,8 +1,8 @@
 # Ashtray
 
-Ashtray is a first-person point-and-click narrative built around one ashtray at RMIT. The ashtray is the spatial and psychological hub linking six scenes: campus map, hub, road, statue, tree, and city.
+Ashtray is a first-person point-and-click narrative built around one ashtray at RMIT. The campus map opens into four connected base views—road, statue, tree, and city—with the cigarette acting as the recurring tool for revealing and transforming objects.
 
-This repository currently contains the first implementation increment: complete scene architecture, object-driven navigation, accessible percentage-based hotspots, flat illustration layers, the cigarette-hand interaction tool, and restrained CSS transitions. Production artwork can replace every placeholder layer without changing the navigation model.
+The experience uses the supplied flat artwork as a 1920×1080 scene canvas, accessible percentage-based hotspots, four short one-shot videos, optional influence papers, and restrained fade, zoom, burn, blackout, and focus transitions. Navigation happens inside the images rather than through a conventional menu.
 
 ## Run locally
 
@@ -23,13 +23,11 @@ pnpm build
 
 - `src/experience/experienceReducer.js` owns scene, local step, and transition state.
 - `src/experience/scenes/` contains one React component per scene.
-- `Scene`, `Hotspot`, `IllustrationLayer`, `Hand`, and `TransitionOverlay` are reusable primitives.
+- `Scene`, `Hotspot`, `ArtworkLayer`, `BaseSceneArrows`, `OneShotVideo`, `Hand`, and `TransitionOverlay` are reusable primitives.
 - Every positioned object uses percentage coordinates within a 16:9 stage.
 - Valid transitions are limited to fade, zoom, burn, blackout, and focus.
-
-## Artwork replacement
-
-Replace CSS placeholder shapes with transparent PNG or WebP assets at a shared 1920×1080 reference size. Keep all states of one object on the same transparent canvas so image swaps do not shift position. Suggested folders are `public/art/shared`, `intro`, `hub`, `road`, `statue`, `tree`, and `city`.
+- The four base scenes form the circular loop `street → first-car → adstreet → campus → street`.
+- Artwork and media live under `public/assets`; external influence-image sources are recorded in `docs/asset-sources.md`.
 
 ## Live site
 

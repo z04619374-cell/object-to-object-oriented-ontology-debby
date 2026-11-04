@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "vite": "latest"
   },
   "devDependencies": {
     "@eslint/js": "latest",
@@ -26,5 +26,8 @@
     "globals": "latest",
     "jsdom": "latest",
     "vitest": "latest"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-darwin-arm64": "1.2.7"
   }
 }

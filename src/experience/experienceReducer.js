@@ -1,6 +1,7 @@
+import { getAdjacentBaseScene } from './baseSceneNavigation'
+
 export const SCENES = Object.freeze({
   INTRO: 'intro',
-  HUB: 'hub',
   ROAD: 'road',
   STATUE: 'statue',
   TREE: 'tree',
@@ -39,17 +40,23 @@ function nextScene(state, scene, transition) {
 
 export function experienceReducer(state, action) {
   switch (action.type) {
-    case 'ENTER_HUB':
-      return nextScene(state, SCENES.HUB, TRANSITIONS.ZOOM)
-    case 'NAVIGATE':
-      return nextScene(state, action.scene, action.transition)
+    case 'ENTER_BASE':
+      return nextScene(state, action.scene ?? SCENES.ROAD, action.transition ?? TRANSITIONS.ZOOM)
+    case 'NAVIGATE_BASE': {
+      const destination = getAdjacentBaseScene(state.scene, action.direction)
+      return destination ? nextScene(state, destination, action.transition) : state
+    }
     case 'ADVANCE':
       if (action.fromStep !== undefined && action.fromStep !== state.step) return state
       return { ...state, step: state.step + 1 }
     case 'SET_STEP':
       return { ...state, step: Math.max(0, action.step ?? 0) }
-    case 'RETURN_HUB':
-      return nextScene(state, SCENES.HUB, action.transition)
+    case 'RESET_SCENE':
+      return nextScene(state, state.scene, action.transition)
+    case 'OPEN_PAPERS':
+      return state.scene === SCENES.INTRO ? { ...state, step: 3 } : state
+    case 'CLOSE_PAPERS':
+      return state.scene === SCENES.INTRO ? { ...state, step: 2 } : state
     case 'RESET':
       return initialExperienceState
     default:

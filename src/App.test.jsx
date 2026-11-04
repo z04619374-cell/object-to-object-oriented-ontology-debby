@@ -1,86 +1,30 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 
-async function enterHub(user) {
-  render(<App />)
-  await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
-}
-
 describe('Ashtray interactive narrative', () => {
-  it('enters the ashtray hub from the campus map', async () => {
+  it('enters the road base directly from the campus map', async () => {
     const user = userEvent.setup()
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: /campus fragment/i })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
 
-    expect(screen.getByRole('heading', { name: /the ashtray/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /look toward the road/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /road and car/i })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /the ashtray/i })).not.toBeInTheDocument()
   })
 
-  it('uses the supplied campus artwork and changes the map after burning the building', async () => {
+  it('starts the required car video after direct entry', async () => {
     const user = userEvent.setup()
     render(<App />)
 
-    const map = screen.getByRole('img', { name: /illustrated rmit campus map/i })
-    expect(map).toHaveAttribute('src', expect.stringMatching(/art\/intro\/campus-map-a\.jpg$/))
+    await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
+    await user.click(screen.getByRole('button', { name: /ignite the red car/i }))
 
-    await user.click(screen.getByRole('button', { name: /burn the teaching building/i }))
-
-    expect(map).toHaveAttribute('src', expect.stringMatching(/art\/intro\/campus-map-b\.jpg$/))
+    expect(screen.getByLabelText(/car departure/i)).toBeInTheDocument()
   })
 
-  it.each([
-    [/look toward the road/i, /a way out/i],
-    [/look toward the statue/i, /authority/i],
-    [/look toward the tree/i, /knowledge/i],
-    [/look toward the city/i, /consumption/i],
-  ])('navigates through environmental directions', async (direction, heading) => {
-    const user = userEvent.setup()
-    await enterHub(user)
-
-    await user.click(screen.getByRole('button', { name: direction }))
-
-    expect(screen.getByRole('heading', { name: heading })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /return to the ashtray/i })).toBeInTheDocument()
-  })
-
-  it('advances the road interaction and returns after blackout', async () => {
-    const user = userEvent.setup()
-    await enterHub(user)
-    await user.click(screen.getByRole('button', { name: /look toward the road/i }))
-
-    await user.click(screen.getByRole('button', { name: /ignite the car/i }))
-    expect(screen.getByText(/inside the car/i)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /start the car/i }))
-    expect(screen.getByText(/the road is disappearing/i)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /continue into black/i }))
-    await user.click(screen.getByRole('button', { name: /return through the darkness/i }))
-
-    expect(screen.getByRole('heading', { name: /the ashtray/i })).toBeInTheDocument()
-  })
-
-  it('uses the supplied road artwork outside and from the driver view', async () => {
-    const user = userEvent.setup()
-    await enterHub(user)
-    await user.click(screen.getByRole('button', { name: /look toward the road/i }))
-
-    expect(screen.getByRole('img', { name: /road beside the ashtray/i })).toHaveAttribute(
-      'src',
-      expect.stringMatching(/art\/road\/road-exterior\.jpg$/),
-    )
-
-    await user.click(screen.getByRole('button', { name: /ignite the car/i }))
-
-    expect(screen.getByRole('img', { name: /driver view into the underpass/i })).toHaveAttribute(
-      'src',
-      expect.stringMatching(/art\/road\/driver-view\.jpg$/),
-    )
-  })
-
-  it('keeps every hotspot keyboard-accessible', async () => {
+  it('keeps every intro hotspot keyboard-accessible', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -88,5 +32,53 @@ describe('Ashtray interactive narrative', () => {
     expect(screen.getByRole('button', { name: /burn the teaching building/i })).toHaveFocus()
     await user.tab()
     expect(screen.getByRole('button', { name: /enter at the ashtray/i })).toHaveFocus()
+  })
+
+  it('moves through the four base scenes in the approved rightward loop', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
+
+    expect(screen.getByRole('heading', { name: /road and car/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /look right/i }))
+    expect(screen.getByRole('heading', { name: /city street/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /look right/i }))
+    expect(screen.getByRole('heading', { name: /campus trees/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /look right/i }))
+    expect(screen.getByRole('heading', { name: /street and statue/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /look right/i }))
+    expect(screen.getByRole('heading', { name: /road and car/i })).toBeInTheDocument()
+  })
+
+  it('opens papers optionally after the map burn and can return to the steak', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /burn the teaching building/i }))
+    fireEvent.ended(screen.getByLabelText(/map burning/i))
+    await user.click(screen.getByRole('button', { name: /open influence papers/i }))
+    await user.click(screen.getByRole('button', { name: /open disco elysium paper/i }))
+    expect(screen.getByText('Disco Elysium')).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    await user.click(screen.getByRole('button', { name: /return to steak/i }))
+    expect(screen.getByRole('img', { name: /t-bone steak map/i })).toBeInTheDocument()
+  })
+
+  it('allows the statue and sky branches without prerequisite interactions', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
+
+    await user.click(screen.getByRole('button', { name: /look left/i }))
+    await user.click(screen.getByRole('button', { name: /approach the statue/i }))
+    expect(screen.getByRole('button', { name: /open the statue head/i })).toBeInTheDocument()
+  })
+
+  it('does not render visible captions, prompts, or scene indices', () => {
+    const { container } = render(<App />)
+
+    expect(container.querySelector('.scene__caption')).not.toBeInTheDocument()
+    expect(container.querySelector('.scene__index')).not.toBeInTheDocument()
+    expect(container.querySelector('.scene-thought')).not.toBeInTheDocument()
   })
 })

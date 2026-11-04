@@ -6,7 +6,6 @@ import {
   SCENES,
   TRANSITIONS,
 } from './experience/experienceReducer'
-import { AshtrayHub } from './experience/scenes/AshtrayHub'
 import { CityScene } from './experience/scenes/CityScene'
 import { IntroCampusMap } from './experience/scenes/IntroCampusMap'
 import { RoadScene } from './experience/scenes/RoadScene'
@@ -16,24 +15,29 @@ import { TreeScene } from './experience/scenes/TreeScene'
 export default function App() {
   const [state, dispatch] = useReducer(experienceReducer, initialExperienceState)
   const advance = () => dispatch({ type: 'ADVANCE', fromStep: state.step })
-  const returnHub = (transition = TRANSITIONS.FADE) => dispatch({ type: 'RETURN_HUB', transition })
+  const resetScene = (transition = TRANSITIONS.FADE) => dispatch({ type: 'RESET_SCENE', transition })
+  const navigateBase = (direction) => dispatch({ type: 'NAVIGATE_BASE', direction })
+  const setStep = (step) => dispatch({ type: 'SET_STEP', step })
 
-  const sceneProps = { step: state.step, onAdvance: advance, onReturn: returnHub }
+  const sceneProps = {
+    step: state.step,
+    onAdvance: advance,
+    onReturn: resetScene,
+    onNavigateBase: navigateBase,
+    onSetStep: setStep,
+  }
 
   const scenes = {
     [SCENES.INTRO]: (
       <IntroCampusMap
         step={state.step}
         onAdvance={advance}
-        onEnterHub={() => dispatch({ type: 'ENTER_HUB' })}
+        onEnterBase={() => dispatch({ type: 'ENTER_BASE' })}
+        onOpenPapers={() => dispatch({ type: 'OPEN_PAPERS' })}
+        onClosePapers={() => dispatch({ type: 'CLOSE_PAPERS' })}
       />
     ),
-    [SCENES.HUB]: (
-      <AshtrayHub
-        onNavigate={(scene, transition) => dispatch({ type: 'NAVIGATE', scene, transition })}
-      />
-    ),
-    [SCENES.ROAD]: <RoadScene {...sceneProps} onReturn={() => returnHub(TRANSITIONS.BLACKOUT)} />,
+    [SCENES.ROAD]: <RoadScene {...sceneProps} onReturn={() => resetScene(TRANSITIONS.BLACKOUT)} />,
     [SCENES.STATUE]: <StatueScene {...sceneProps} />,
     [SCENES.TREE]: <TreeScene {...sceneProps} />,
     [SCENES.CITY]: <CityScene {...sceneProps} />,

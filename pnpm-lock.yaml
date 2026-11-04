@@ -51,6 +51,10 @@ importers:
       vitest:
         specifier: latest
         version: 5.0.0(jsdom@30.0.1)(vite@8.2.2)
+    optionalDependencies:
+      '@rolldown/binding-darwin-arm64':
+        specifier: 1.2.7
+        version: 1.2.7
 
 packages:
 
