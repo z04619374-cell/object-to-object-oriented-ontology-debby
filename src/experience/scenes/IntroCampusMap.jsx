@@ -19,18 +19,22 @@ export function IntroCampusMap({ step, onAdvance, onEnterBase, onOpenPapers, onC
       ) : null}
 
       {step === 1 ? (
-        <OneShotVideo src={ASSETS.media.mapBurn} label="Map burning" onEnded={onAdvance} />
+        <>
+          <OneShotVideo src={ASSETS.media.mapBurn} label="Map burning" onEnded={onAdvance} />
+          <Hand active src={ASSETS.hands.cigarette} />
+        </>
       ) : null}
 
       {step === 2 ? (
         <>
           <ArtworkLayer src={ASSETS.intro.steakMap} alt="T-bone steak map" />
           <Hotspot label="Open influence papers" x={50} y={52} width={70} height={82} onClick={onOpenPapers} />
+          <Hand src={ASSETS.hands.cigarette} />
         </>
       ) : null}
 
       {step !== 1 ? (
-        <Hotspot label="Enter at the ashtray" x={51} y={77} width={11} height={18} variant="ember" onClick={onEnterBase}>
+        <Hotspot label="Enter at the ashtray" x={45} y={84} width={11} height={18} variant="ember" onClick={onEnterBase}>
           <img className="red-point-asset" src={ASSETS.intro.redPoint} alt="" aria-hidden="true" />
         </Hotspot>
       ) : null}

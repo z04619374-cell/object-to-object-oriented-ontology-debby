@@ -28,6 +28,7 @@ export function TreeScene({ step, onAdvance, onReturn, onNavigateBase }) {
       {step === 3 ? (
         <FullSceneAction label="Return to campus" onClick={onReturn}>
           <ArtworkLayer src={ASSETS.tree.apple} alt="One apple on a branch" />
+          <Hand src={ASSETS.hands.torch} />
         </FullSceneAction>
       ) : null}
     </Scene>

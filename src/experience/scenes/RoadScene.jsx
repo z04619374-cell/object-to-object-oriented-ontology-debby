@@ -23,7 +23,7 @@ export function RoadScene({ step, onAdvance, onReturn, onNavigateBase }) {
       ) : null}
 
       {step === 1 ? (
-        <OneShotVideo src={ASSETS.media.carGo} label="Car departure" onEnded={onAdvance} />
+        <><OneShotVideo src={ASSETS.media.carGo} label="Car departure" onEnded={onAdvance} /><Hand src={ASSETS.hands.cigarette} /></>
       ) : null}
 
       {frameIndex >= 0 && frameIndex < ASSETS.road.frames.length ? (

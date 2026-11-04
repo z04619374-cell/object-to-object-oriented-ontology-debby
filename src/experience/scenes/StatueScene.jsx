@@ -10,8 +10,8 @@ import { OneShotVideo } from '../components/OneShotVideo'
 import { Scene } from '../components/Scene'
 
 const PEDESTRIAN_HOTSPOTS = [
-  [35.3, 59.5, 2.5, 10], [33.8, 66.5, 2.5, 15], [35.8, 84.5, 3.5, 22],
-  [39.3, 84, 4.5, 25], [29.7, 98, 5, 5], [46.8, 96, 5, 8],
+  [39.5, 83, 4.8, 25], [35.1, 83, 3.2, 19], [46.7, 96.2, 5.2, 7.5],
+  [29.5, 98, 3.8, 4], [33.4, 65.5, 2.2, 13], [35.6, 60.1, 1.8, 9],
 ]
 
 export function StatueScene({ step, onAdvance, onReturn, onNavigateBase }) {
@@ -41,10 +41,11 @@ export function StatueScene({ step, onAdvance, onReturn, onNavigateBase }) {
           <Hand src={ASSETS.hands.gun} />
         </>
       ) : null}
-      {step === 2 ? <OneShotVideo src={ASSETS.media.statueFirework} label="Statue firework" onEnded={onAdvance} /> : null}
+      {step === 2 ? <><OneShotVideo src={ASSETS.media.statueFirework} label="Statue firework" onEnded={onAdvance} /><Hand src={ASSETS.hands.gun} /></> : null}
       {step === 3 ? (
         <FullSceneAction label="Return to the street" onClick={onReturn}>
           <ArtworkLayer src={ASSETS.statue.focus} alt="Statue after the firework" />
+          <Hand src={ASSETS.hands.gun} />
         </FullSceneAction>
       ) : null}
     </Scene>

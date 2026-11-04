@@ -45,8 +45,8 @@
 
 .hand { position: absolute; z-index: 42; right: -2%; bottom: -8%; width: 29%; height: 30%; transform: rotate(-8deg); transform-origin: 100% 100%; pointer-events: none; transition: transform .45s var(--ease); filter: drop-shadow(0 1rem 1rem rgba(0,0,0,.18)); }
 .hand--active { transform: rotate(-13deg) translate(-1%, -2%); }
-.hand-asset { position: absolute; inset: 0; z-index: 18; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; }
-.hand-asset--active { transform: translate(-.4%, -.35%) scale(1.012); transform-origin: center; }
+.hand-asset { position: absolute; inset: 0; z-index: 18; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; transform: scale(.7) rotate(-5deg); transform-origin: 100% 100%; }
+.hand-asset--active { transform: scale(.715) rotate(-6deg); }
 .hand__wrist { position: absolute; right: -5%; bottom: 0; width: 84%; height: 50%; border-radius: 55% 8% 0 45%; background: #b9a895; }
 .hand__finger { position: absolute; right: 46%; bottom: 38%; width: 49%; height: 17%; border-radius: 60% 18% 30% 60%; background: #c1af9b; transform: rotate(-7deg); }
 .hand__tool { position: absolute; left: -4%; bottom: 52%; width: 51%; height: 4%; border-radius: 10% 45% 45% 10%; background: #ded8c1; transform: rotate(-7deg); box-shadow: inset -1.2rem 0 0 #9c6742; }
@@ -72,7 +72,7 @@
 .map__label { position: absolute; left: 45%; top: 10%; color: rgba(35,35,31,.5); font: clamp(.36rem, .55vw, .62rem)/1 var(--mono); letter-spacing: .22em; writing-mode: vertical-rl; }
 .placeholder-building { position: absolute; inset: 7%; border: 1px solid rgba(25,25,22,.45); background: repeating-linear-gradient(90deg, rgba(55,56,48,.15) 0 12%, transparent 12% 20%); transform: rotate(1deg); }
 .red-dot { position: absolute; left: 50%; top: 50%; width: clamp(.8rem, 1.8vw, 1.7rem); aspect-ratio: 1; border-radius: 50%; background: var(--ember); transform: translate(-50%, -50%); box-shadow: 0 0 0 .2rem rgba(167,46,32,.15), 0 0 1.2rem rgba(167,46,32,.42); }
-.red-point-asset { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.red-point-asset { position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; object-fit: contain; pointer-events: none; }
 .papers-backdrop { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; background: #090909; }
 .paper-scatter { position: absolute; inset: 0; z-index: 5; transition: opacity .25s ease; pointer-events: none; }
 .paper-scatter--dimmed { opacity: .16; }

@@ -38,10 +38,11 @@ export function CityScene({ step, onAdvance, onSetStep, onReturn, onNavigateBase
           <Hand active src={ASSETS.hands.cigarette} />
         </>
       ) : null}
-      {step === 11 ? <OneShotVideo src={ASSETS.media.skyFirework} label="Sky firework" onEnded={onAdvance} /> : null}
+      {step === 11 ? <><OneShotVideo src={ASSETS.media.skyFirework} label="Sky firework" onEnded={onAdvance} /><Hand src={ASSETS.hands.cigarette} /></> : null}
       {step === 12 ? (
         <FullSceneAction label="Return to the city" onClick={onReturn}>
           <ArtworkLayer src={ASSETS.city.sky} alt="Night sky after the firework" />
+          <Hand src={ASSETS.hands.cigarette} />
         </FullSceneAction>
       ) : null}
     </Scene>

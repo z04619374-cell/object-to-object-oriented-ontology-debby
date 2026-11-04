@@ -7,7 +7,13 @@ describe('IntroCampusMap', () => {
   it('enters Road directly from the map red point', async () => {
     const user = userEvent.setup()
     const onEnterBase = vi.fn()
-    render(<IntroCampusMap step={0} onAdvance={() => {}} onEnterBase={onEnterBase} />)
+    const { container } = render(<IntroCampusMap step={0} onAdvance={() => {}} onEnterBase={onEnterBase} />)
+
+    const redPoint = screen.getByRole('button', { name: /enter at the ashtray/i })
+    expect(redPoint.style.getPropertyValue('--x')).toBe('45%')
+    expect(redPoint.style.getPropertyValue('--y')).toBe('84%')
+    expect(container.querySelector('.red-point-asset')).toBeInTheDocument()
+    expect(container.querySelector('.hand-asset')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /enter at the ashtray/i }))
     expect(onEnterBase).toHaveBeenCalledOnce()
@@ -27,6 +33,7 @@ describe('IntroCampusMap', () => {
 
     rerender(<IntroCampusMap step={2} onAdvance={onAdvance} onEnterBase={() => {}} onOpenPapers={() => {}} />)
     expect(screen.getByRole('img', { name: /t-bone steak map/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /enter at the ashtray/i }).style.getPropertyValue('--x')).toBe('45%')
   })
 
   it('offers papers and a direct Road route from the steak', async () => {

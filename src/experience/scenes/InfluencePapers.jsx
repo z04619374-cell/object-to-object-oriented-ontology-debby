@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { INFLUENCES } from '../influences'
 import { Scene } from '../components/Scene'
+import { Hand } from '../components/Hand'
+import { ASSETS } from '../assetManifest'
 
 export function InfluencePapers({ onClose }) {
   const [focusedId, setFocusedId] = useState(null)
@@ -46,6 +48,7 @@ export function InfluencePapers({ onClose }) {
           </div>
         </article>
       ) : null}
+      <Hand src={ASSETS.hands.cigarette} />
     </Scene>
   )
 }
